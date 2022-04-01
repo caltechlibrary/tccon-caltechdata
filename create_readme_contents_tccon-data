@@ -1,0 +1,109 @@
+#! /bin/csh
+
+if( $#argv < 1 ) then
+echo "Usage create_readme_contents ncfile"
+echo "Example: "
+echo "create_readme_contents oc20080706_20140512.public.nc"
+exit(0)
+endif
+
+#set site = $1
+#echo $site
+
+set filename = $1
+#echo $filename
+set sitename = `ncdump -h $filename | grep Location | awk -F\" '{print $2}'`
+#echo 'Sitename=' $sitename
+set site = `ncdump -h $filename | grep longName | awk -F\" '{print $2}'`
+#echo "site=" $site
+
+set long = `ncdump -v long_deg $filename | tail | head -n1 | awk -F, '{print $1}'`
+set lat  = `ncdump -v lat_deg  $filename | tail | head -n1 | awk -F, '{print $1}'`
+set date_start  = `echo  $filename | awk -F. '{print $1}' | awk -F"_" '{print $1}' | cut -c3-`
+set date_end  = `echo  $filename | awk -F. '{print $1}' | awk -F"_" '{print $2}'`
+
+if( $site == 'lamont01') then
+  set siteurl = 'Lamont'
+else if( $site == 'parkfalls01') then
+  set siteurl = 'Park_Falls'
+else if( $site == 'anmeyondo01') then
+  set siteurl = 'Anmyeondo'
+else if( $site == 'anmyeondo01') then
+  set siteurl = 'Anmyeondo'
+else if( $site == 'ascension01') then
+  set siteurl = 'Ascension_Island'
+else if( $site == 'bialystok01') then
+  set siteurl = 'Bialystok'
+else if( $site == 'pasadena01') then
+  set siteurl = 'Caltech'
+else if( $site == 'darwin01') then
+  set siteurl = 'Darwin'
+else if( $site == 'edwards01') then
+  set siteurl = 'Dryden'
+else if( $site == 'eureka01') then
+  set siteurl = 'Eureka'
+else if( $site == 'fourcorners01') then
+  set siteurl = 'Four_Corners'
+else if( $site == 'garmisch01') then
+  set siteurl = 'Garmisch'
+else if( $site == 'indianapolis01') then
+  set siteurl = 'Indianapolis'
+else if( $site == 'izana01') then
+  set siteurl = 'Izana'
+else if( $site == 'jpl01') then
+  set siteurl = 'JPL'
+else if( $site == 'jpl02') then
+  set siteurl = 'JPL'
+else if( $site == 'karlsruhe01') then
+  set siteurl = 'Karlsruhe'
+else if( $site == 'lauder01') then
+  set siteurl = 'Lauder'
+else if( $site == 'lauder02') then
+  set siteurl = 'Lauder'
+else if( $site == 'manaus01') then
+  set siteurl = 'Manaus'
+else if( $site == 'nyalesund01') then
+  set siteurl = 'Ny-Alesund'
+else if( $site == 'orleans01') then
+  set siteurl = 'Orleans'
+else if( $site == 'paris01') then
+  set siteurl = 'Paris'
+else if( $site == 'reunion01') then
+  set siteurl = 'Reunion_Island'
+else if( $site == 'rikubetsu01') then
+  set siteurl = 'Rikubetsu'
+else if( $site == 'saga01') then
+  set siteurl = 'Saga'
+else if( $site == 'sodankyla01') then
+  set siteurl = 'Sodankyla'
+else if( $site == 'tsukuba01') then
+  set siteurl = 'Tsukuba'
+else if( $site == 'tsukuba02') then
+  set siteurl = 'Tsukuba'
+else if( $site == 'bremen01') then
+  set siteurl = 'Bremen'
+else if( $site == 'wollongong01') then
+  set siteurl = 'Wollongong'
+else if( $site == 'easttroutlake01') then
+  set siteurl = 'East Trout Lake'
+else if( $site == 'burgos01') then
+  set siteurl = 'Burgos'
+else if( $site == 'zugspitze01') then
+  set siteurl = 'Zugspitze'
+else if( $site == 'hefei01') then
+  set siteurl = 'Hefei'
+endif
+
+echo "GGG2020 TCCON data from $sitename ($lat N,$long E)."
+#echo "The data begin on $date_start."
+echo "The data cover dates starting from $date_start through $date_end."
+echo ""
+echo "Please refer to the data description for these data on the TCCON wiki:"
+echo "https://tccon-wiki.caltech.edu/Main/DataUsePolicy"
+echo ""
+echo "The site page for $sitename is:"
+echo "https://tccon-wiki.caltech.edu/Main/$siteurl"
+echo ""
+echo "Below is a description of the contents of the $sitename .nc file:"
+ncdump -h $filename
+endif

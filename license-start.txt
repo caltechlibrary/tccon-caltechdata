@@ -1,0 +1,35 @@
+TCCON Data License
+
+1. Downloading and/or using the Data will indicate your acceptance to enter
+into this license agreement.
+
+2. This license grants you a perpetual, royalty-free, non-exclusive and
+non-assignable license to use the Data subject to the terms and restrictions
+set forth herein.
+
+3. You have the right to modify and improve on the Data and said modification
+or improvement will be proprietary to you. In consideration of the royalty-free
+and collaborative nature of this license agreement, however, you agree to keep
+the authors informed of the modification and improvement to the Data and hereby
+grant to TCCON a non-exclusive, unconditional, irrevocable, perpetual and
+royalty-free right and license to use your modifications or improvements with
+proper acknowledgement to you as the source.
+
+4. All other rights, including redistribution, display, and publishing
+adaptations are reserved.
+
+5. At a minimum of 10 weeks prior to publication or presentation of works that
+include TCCON data, you must contact the individuals listed on the DOI landing
+page via email and provide a description of the intended publication or
+presentation. If the TCCON partner makes a significant intellectual
+contribution to the research, or TCCON data from a site is essential to the
+work, co−authorship would normally be expected. This should be discussed at an
+early stage in the work. If the individuals do not respond after 3 emails
+distributed over the 10 week period, the data are licensed under a cc-by 4.0
+license.
+
+6. All Data are assigned a digital object identifier (DOI). Use of these data
+to support a published work must include a citation that includes the data DOI.
+Use the standard citation format below, unless a different format is required
+for publication:
+

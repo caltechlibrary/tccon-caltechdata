@@ -1,0 +1,4 @@
+Failure to comply with the terms of this license will result in forfeit of the
+right to use this data until the issue is resolved to the satisfaction of the
+appropriate TCCON PIs.
+
