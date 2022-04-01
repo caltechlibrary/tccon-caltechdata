@@ -1,4 +1,4 @@
-from mint_doi import mint_doi
+#from mint_doi import mint_doi
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
 import os, json, argparse, subprocess, glob 
@@ -53,8 +53,9 @@ for skey in args.sid:
 
     #Dates
     today = datetime.date.today().isoformat()
-    cred = sitef[2:6]+'-'+sitef[6:8]+'-'+sitef[8:10]+\
-                    '/'+sitef[11:15]+'-'+sitef[15:17]+'-'+sitef[17:19]
+    sfname = sitef.split('3a-std-public/')[1]
+    cred = sfname[2:6]+'-'+sfname[6:8]+'-'+sfname[8:10]+\
+                    '/'+sfname[11:15]+'-'+sfname[15:17]+'-'+sfname[17:19]
     metadata['dates'] = [{'dateType':'Collected','date':cred},\
             {'dateType':'Updated','date':today},\
             {'dateType':'Created','date':today}]
