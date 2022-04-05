@@ -32,8 +32,6 @@ for skey in args.sid:
         exit()
     else:
         sitef = sitef[0]
-    print(sitef)
-    exit()
 
     #Prep metadata
     site_file = open(metadata_path + site_info_fname,'r')
@@ -95,8 +93,8 @@ for skey in args.sid:
     files = ['README.txt','LICENSE.txt',sitef]
 
     print(metadata['identifier'])
-    #response = caltechdata_write(metadata,token,files,production,schema="43")
-    #print(response)
+    response = caltechdata_write(metadata,token,files,production,schema="43")
+    print(response)
     rec_id = response.split('/')[4].split('.')[0]
     print(rec_id)
 
@@ -115,7 +113,7 @@ for skey in args.sid:
 
     metadata['rightsList'] = [{'rightsURI':url,'rights':'TCCON Data License'}]
 
-    #response = caltechdata_edit(token,new_id,copy.deepcopy(metadata),{},{},production,schema="43")
+    response = caltechdata_edit(token,new_id,copy.deepcopy(metadata),{},{},production,schema="43")
     print(response)
 
     if production == False:
