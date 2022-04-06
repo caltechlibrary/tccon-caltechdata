@@ -92,7 +92,6 @@ for skey in args.sid:
     #Files to be uploaded
     files = ['README.txt','LICENSE.txt',sitef]
 
-    print(metadata['identifier'])
     response = caltechdata_write(metadata,token,files,production,schema="43")
     print(response)
     rec_id = response.split('/')[4].split('.')[0]
