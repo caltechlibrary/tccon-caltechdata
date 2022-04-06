@@ -28,7 +28,7 @@ for skey in args.sid:
     #Get data file
     sitef = glob.glob(f'{data_location}{skey}*.nc')
     if len(sitef) != 1:
-        print("Cannot find public site file in /data/tccon/temp")
+        print(f"Cannot find public file for site {skey} in {data_location}")
         exit()
     else:
         sitef = sitef[0]
@@ -72,11 +72,11 @@ for skey in args.sid:
     #Add contributor email
     contributors = metadata['contributors']
     contributors.append({'contributorType':'ContactPerson',\
-            'contributorEmail':contact_email,'contributorName':contact_name})
+            'contributorEmail':contact_email,'name':contact_name})
 
     #Generate README file
     outf = open('README.txt','w')
-    subprocess.run(['create_readme_contents_tccon-data',sitef],check=True,stdout=outf)
+    subprocess.run(['./create_readme_contents_tccon-data',sitef],check=True,stdout=outf)
 
     #Generate new license
     lic_f = open("license-start.txt","r")
