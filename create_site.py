@@ -104,7 +104,7 @@ for skey in args.sid:
         api_url = 'https://cd-sandbox.tind.io/api/record/'
     else:
         api_url = 'https://data.caltech.edu/api/record/'
-    response = requests.get(api_url+new_id)
+    response = requests.get(api_url+rec_id)
     ex_metadata = response.json()['metadata']
     for f in ex_metadata['electronic_location_and_access']:
         if f['electronic_name'][0]=='LICENSE.txt':
@@ -112,7 +112,7 @@ for skey in args.sid:
 
     metadata['rightsList'] = [{'rightsURI':url,'rights':'TCCON Data License'}]
 
-    response = caltechdata_edit(token,new_id,copy.deepcopy(metadata),{},{},production,schema="43")
+    response = caltechdata_edit(token,rec_id,copy.deepcopy(metadata),{},{},production,schema="43")
     print(response)
 
     if production == False:
