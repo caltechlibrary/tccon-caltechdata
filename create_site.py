@@ -1,7 +1,7 @@
 #from mint_doi import mint_doi
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
-import os, json, argparse, subprocess, glob, datetime 
+import os, json, argparse, subprocess, glob, datetime, requests 
 
 #Switch for test or production
 production = False
