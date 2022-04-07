@@ -16,7 +16,7 @@ echo "site=" $site
 
 set long = `ncdump -v long $filename | tail | head -n1 | awk -F, '{print $1}'`
 set lat  = `ncdump -v lat  $filename | tail | head -n1 | awk -F, '{print $1}'`
-set date_start  = `echo  $filename | awk -F. '{print $1}' | awk -F"_" '{print $1}' | cut -c3-`
+set date_start  = `echo  $filename | awk -F. '{print $1}' | awk -F"_" '{print $1}' | awk -F"/" '{print $(NF)}' | cut -c2-`
 set date_end  = `echo  $filename | awk -F. '{print $1}' | awk -F"_" '{print $2}'`
 
 if( $site == 'lamont01') then
