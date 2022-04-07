@@ -92,12 +92,12 @@ for skey in args.sid:
     #Files to be uploaded
     files = ['README.txt','LICENSE.txt',sitef]
 
+    doi = metadata['identifiers'][0]['identifier']
+
     response = caltechdata_write(metadata,token,files,production,schema="43")
     print(response)
     rec_id = response.split('/')[4].split('.')[0]
     print(rec_id)
-
-    doi = metadata['identifier']['identifier']
 
     #Get file url
     if production == False:
