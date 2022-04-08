@@ -5,7 +5,7 @@ from datacite import DataCiteRESTClient
 import os, json, argparse, subprocess, glob, datetime, requests, copy
 
 #Switch for test or production
-production = False
+production = True
 #Location where TCCON metadata application puts its files
 metadata_path = '/var/www/tccon-metadata/'
 #TCCON Site Info File Name
@@ -59,6 +59,8 @@ for skey in args.sid:
             {'dateType':'Updated','date':today},\
             {'dateType':'Created','date':today}]
     metadata['publicationDate'] = today
+    year = today.split('-')[0]
+    metadata['publicationYear'] = year
 
     #Standard cleanup
     metadata.pop("__last_modified__")
@@ -111,18 +113,18 @@ for skey in args.sid:
         if f['electronic_name'][0]=='LICENSE.txt':
             url = f['uniform_resource_identifier']
 
-    metadata['rightsList'] = [{'rightsURI':url,'rights':'TCCON Data License'}]
+    metadata['rightsList'] = [{'rightsUri':url,'rights':'TCCON Data License'}]
 
     response = caltechdata_edit(rec_id,copy.deepcopy(metadata),token,{},{},production,schema="43")
     print(response)
 
     if production == False:
         doi='10.33569/TCCON'
-        url = 'https://cd-sandbox.tind.io'
+        url = 'https://cd-sandbox.tind.io/'
         datacite = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password,
                 prefix="10.33569",test_mode=True)
     else:
-        url = 'https://data.caltech.edu'
+        url = 'https://data.caltech.edu/'
         datacite = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password,
                 prefix="10.14291")
 
@@ -133,6 +135,6 @@ for skey in args.sid:
     if 'publicationDate' in metadata:
         metadata.pop('publicationDate')
 
-    doi = datacite.public_doi(metadata, url + str(idv), doi=doi)
+    doi = datacite.public_doi(metadata, url + str(rec_id), doi=doi)
     print(doi)
 
