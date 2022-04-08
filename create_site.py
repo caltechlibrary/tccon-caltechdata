@@ -120,11 +120,11 @@ for skey in args.sid:
 
     if production == False:
         doi='10.33569/TCCON'
-        url = 'https://cd-sandbox.tind.io/'
+        url = 'https://cd-sandbox.tind.io/records/'
         datacite = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password,
                 prefix="10.33569",test_mode=True)
     else:
-        url = 'https://data.caltech.edu/'
+        url = 'https://data.caltech.edu/records/'
         datacite = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password,
                 prefix="10.14291")
 
