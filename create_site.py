@@ -112,7 +112,7 @@ for skey in args.sid:
 
     metadata['rightsList'] = [{'rightsURI':url,'rights':'TCCON Data License'}]
 
-    response = caltechdata_edit(token,rec_id,copy.deepcopy(metadata),{},{},production,schema="43")
+    response = caltechdata_edit(rec_id,copy.deepcopy(metadata),token,{},{},production,schema="43")
     print(response)
 
     if production == False:
