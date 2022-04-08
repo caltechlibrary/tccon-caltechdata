@@ -133,6 +133,6 @@ for skey in args.sid:
     if 'publicationDate' in metadata:
         metadata.pop('publicationDate')
 
-    doi = d.public_doi(metadata, url + str(idv), doi=doi)
+    doi = datacite.public_doi(metadata, url + str(idv), doi=doi)
     print(doi)
 
