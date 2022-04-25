@@ -177,12 +177,13 @@ for skey in args.sid:
     infile.close()
 
     if production == True:
-        os.rename("/data/tccon/site_ids.csv", "/data/tccon/old/site_ids.csv")
+        os.rename("/data/tccon/site_ids.csv", "/data/tccon/old_site_ids.csv")
         out_id = open("/data/tccon/site_ids.csv", "w")
         out_id.write(outstr)
         out_id.close()
 
     # Update site list - assumes new sites are in alphabetical order
+    os.rename("/data/tccon/sites.csv", "/data/tccon/old_sites.csv")
     existing = open("/data/tccon/sites.csv", "r")
     sites = csv.reader(existing)
     outstr = ""
