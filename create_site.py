@@ -183,7 +183,6 @@ for skey in args.sid:
         out_id.close()
 
     # Update site list - assumes new sites are in alphabetical order
-    os.rename("/data/tccon/sites.csv", "/data/tccon/old_sites.csv")
     existing = open("/data/tccon/sites.csv", "r")
     sites = csv.reader(existing)
     outstr = ""
@@ -195,6 +194,7 @@ for skey in args.sid:
             included = True
         else:
             outstr = outstr + ",".join(row) + "\n"
-    outsites = open("/data/tccon/temp/sites.csv", "w")
+    os.rename("/data/tccon/sites.csv", "/data/tccon/old_sites.csv")
+    outsites = open("/data/tccon/sites.csv", "w")
     outsites.write(outstr)
     outsites.close()
