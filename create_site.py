@@ -1,8 +1,7 @@
-# from mint_doi import mint_doi
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
 from datacite import DataCiteRESTClient
-import os, json, argparse, subprocess, glob, datetime, requests, copy
+import os, csv, json, argparse, subprocess, glob, datetime, requests, copy
 
 # Switch for test or production
 production = True
