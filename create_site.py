@@ -183,6 +183,27 @@ for skey in args.sid:
         out_id.close()
 
     # Update site list - assumes new sites are in alphabetical order
+
+    # Generate site text
+    for t in metadata["titles"]:
+        if "titleType" not in t:
+            title = t["title"].split("from")[1].split(",")[0].strip()
+    split = cred.split("/")
+    first = split[0]
+    second = split[1]
+    outsites = (
+        title
+        + " ["
+        + sname
+        + "],https://doi.org/"
+        + doi
+        + ","
+        + first
+        + ","
+        + second
+        + "\n"
+    )
+
     existing = open("/data/tccon/sites.csv", "r")
     sites = csv.reader(existing)
     outstr = ""
