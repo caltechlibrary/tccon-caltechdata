@@ -61,6 +61,8 @@ else if( $site == 'lauder03') then
   set siteurl = 'Lauder'
 else if( $site == 'manaus01') then
   set siteurl = 'Manaus'
+else if( $site == 'nicosia01') then
+  set siteurl = 'Nicosia'
 else if( $site == 'nyalesund01') then
   set siteurl = 'Ny-Alesund'
 else if( $site == 'orleans01') then
