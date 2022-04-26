@@ -191,18 +191,7 @@ for skey in args.sid:
     split = cred.split("/")
     first = split[0]
     second = split[1]
-    outsites = (
-        title
-        + " ["
-        + sname
-        + "],https://doi.org/"
-        + doi
-        + ","
-        + first
-        + ","
-        + second
-        + "\n"
-    )
+    outsites = f"{title} [{site_name}],https://doi.org/{doi},{first},{second}\n"
 
     existing = open("/data/tccon/sites.csv", "r")
     sites = csv.reader(existing)
