@@ -5,7 +5,7 @@ from caltechdata_api import get_metadata
 from datacite import DataCiteRESTClient, schema43
 import datetime, requests, copy
 
-url = "https://data.caltech.edu/records/"
+data_url = "https://data.caltech.edu/records/"
 
 token = os.environ["RDMTOK"]
 password = os.environ["DATACITE"]
@@ -102,6 +102,6 @@ for c in metadata["contributors"]:
 if "publicationDate" in metadata:
     metadata.pop("publicationDate")
 
-doi = d.public_doi(metadata, url + str(rec_id), doi=doi)
+doi = d.public_doi(metadata, data_url + str(rec_id), doi=doi)
 
 print(doi)
