@@ -71,8 +71,8 @@ for skey in args.sid:
         if f["electronic_name"][0] == "LICENSE.txt":
             url = f["uniform_resource_identifier"]
     for date in ex_metadata['relevantDates']:
-        if date['relevantDateValue'] == 'Created':
-            created = ex_metadata['relevantDates']
+        if date['relevantDateType'] == 'Created':
+            created = ex_metadata['relevantDateValue']
 
     # Get Metadata for DOI
     meta_file = open(f"{doi_metadata}{skey}_{site_name}.json", "r")
@@ -132,7 +132,7 @@ for skey in args.sid:
 
     metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
 
-    response = caltechdata_edit(rec_id, metadata, token, files, production, schema="43")
+    response = caltechdata_edit(rec_id, metadata, token, files, {}, production, schema="43")
     print(response)
 
     if production == False:
@@ -157,8 +157,7 @@ for skey in args.sid:
     if "publicationDate" in metadata:
         metadata.pop("publicationDate")
 
-    doi = datacite.update_doi(doi,metadata)
-    print(doi)
+    datacite.update_doi(doi,metadata)
 
     # Update site list 
 
