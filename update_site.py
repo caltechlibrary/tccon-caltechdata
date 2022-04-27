@@ -176,7 +176,7 @@ for skey in args.sid:
     sites = csv.reader(existing)
     outstr = ""
     for row in sites:
-        if title.startswith(row[0])
+        if title.startswith(row[0]):
             outstr = outstr + outsites
         else:
             outstr = outstr + ",".join(row) + "\n"
