@@ -94,7 +94,7 @@ for skey in args.sid:
         + sfname[17:19]
     )
     metadata["dates"] = [
-        {"dateType": "Created", "date": created}
+        {"dateType": "Created", "date": created},
         {"dateType": "Collected", "date": cred},
         {"dateType": "Updated", "date": today},
     ]
