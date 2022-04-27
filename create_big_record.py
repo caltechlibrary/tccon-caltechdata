@@ -1,5 +1,6 @@
 import os, json
-
+from caltechdata_api import caltechdata_edit
+from caltechdata_api import caltechdata_write
 from caltechdata_api import get_metadata
 from datacite import DataCiteRESTClient, schema43
 import datetime
@@ -42,7 +43,8 @@ metadata["publicationYear"] = year
 identifiers = []
 record_metadata = get_metadata(20093, schema="43")
 for identifier in record_metadata["relatedIdentifiers"]:
-    print(identifier)
+    if identifier[relationType] != 'IsPartOf':
+        identifiers.append(identifier)
 metadata["relatedIdentifiers"] = identifiers
 
 # Generate new license
@@ -69,6 +71,9 @@ outf.close()
 # Files to be uploaded
 files = ["LICENSE.txt", "/data/tccon/3a-std-public/tccon.latest.public.tgz"]
 production = True
+
+print(metadata)
+exit()
 
 response = caltechdata_write(metadata, token, files, production, schema="43")
 print(response)
