@@ -60,6 +60,7 @@ for skey in args.sid:
     contact_email = split_contact[1].split(">")[0]
 
     #Get existing metadata
+    rec_id = ids[site_name]
     if production == False:
         api_url = "https://cd-sandbox.tind.io/api/record/"
     else:
@@ -128,8 +129,6 @@ for skey in args.sid:
     files = ["README.txt", sitef]
 
     doi = metadata["identifiers"][0]["identifier"]
-
-    rec_id = ids[site_name]
 
     metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
 
