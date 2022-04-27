@@ -3,7 +3,7 @@ from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
 from caltechdata_api import get_metadata
 from datacite import DataCiteRESTClient, schema43
-import datetime, requests
+import datetime, requests, copy
 
 url = "https://data.caltech.edu/records/"
 
