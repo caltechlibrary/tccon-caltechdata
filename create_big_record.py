@@ -43,7 +43,7 @@ metadata["publicationYear"] = year
 identifiers = []
 record_metadata = get_metadata(20093, schema="43")
 for identifier in record_metadata["relatedIdentifiers"]:
-    if identifier[relationType] != 'IsPartOf':
+    if identifier['relationType'] != 'IsPartOf':
         identifiers.append(identifier)
 metadata["relatedIdentifiers"] = identifiers
 
@@ -71,9 +71,6 @@ outf.close()
 # Files to be uploaded
 files = ["LICENSE.txt", "/data/tccon/3a-std-public/tccon.latest.public.tgz"]
 production = True
-
-print(metadata)
-exit()
 
 response = caltechdata_write(metadata, token, files, production, schema="43")
 print(response)
