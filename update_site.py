@@ -27,14 +27,14 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-#Read in site id file with CaltechDATA IDs
+# Read in site id file with CaltechDATA IDs
 infile = open("/data/tccon/site_ids.csv")
 site_ids = csv.reader(infile)
 ids = {}
 version = {}
 for row in site_ids:
-    ids[row[0]]=row[1]
-    version[row[0]]=row[2]
+    ids[row[0]] = row[1]
+    version[row[0]] = row[2]
 
 # For each site to update
 for skey in args.sid:
@@ -59,7 +59,7 @@ for skey in args.sid:
     contact_name = split_contact[0]
     contact_email = split_contact[1].split(">")[0]
 
-    #Get existing metadata
+    # Get existing metadata
     rec_id = ids[site_name]
     if production == False:
         api_url = "https://cd-sandbox.tind.io/api/record/"
@@ -70,9 +70,9 @@ for skey in args.sid:
     for f in ex_metadata["electronic_location_and_access"]:
         if f["electronic_name"][0] == "LICENSE.txt":
             url = f["uniform_resource_identifier"]
-    for date in ex_metadata['relevantDates']:
-        if date['relevantDateType'] == 'Created':
-            created = ex_metadata['relevantDateValue']
+    for date in ex_metadata["relevantDates"]:
+        if date["relevantDateType"] == "Created":
+            created = ex_metadata["relevantDateValue"]
 
     # Get Metadata for DOI
     meta_file = open(f"{doi_metadata}{skey}_{site_name}.json", "r")
@@ -132,7 +132,9 @@ for skey in args.sid:
 
     metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
 
-    response = caltechdata_edit(rec_id, metadata, token, files, {}, production, schema="43")
+    response = caltechdata_edit(
+        rec_id, metadata, token, files, {}, production, schema="43"
+    )
     print(response)
 
     if production == False:
@@ -157,9 +159,9 @@ for skey in args.sid:
     if "publicationDate" in metadata:
         metadata.pop("publicationDate")
 
-    datacite.update_doi(doi,metadata)
+    datacite.update_doi(doi, metadata)
 
-    # Update site list 
+    # Update site list
 
     # Generate site text
     for t in metadata["titles"]:
