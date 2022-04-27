@@ -93,6 +93,8 @@ else if( $site == 'zugspitze01') then
   set siteurl = 'Zugspitze'
 else if( $site == 'hefei01') then
   set siteurl = 'Hefei'
+else if( $site == 'xianghe01') then
+  set siteurl = 'Xianghe'
 endif
 
 echo "GGG2020 TCCON data from $sitename ($lat N,$long E)."
