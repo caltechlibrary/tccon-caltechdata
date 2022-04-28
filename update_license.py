@@ -1,4 +1,4 @@
-import os, json
+import os, json, csv
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
 from caltechdata_api import get_metadata
