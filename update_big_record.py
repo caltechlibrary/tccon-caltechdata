@@ -32,7 +32,9 @@ is the GGG2020 data release.""",
 
 for contributor in metadata["contributors"]:
     if contributor["name"] == "Wunch, Debra":
-        contributor["affiliation"] = "University of Toronto, Toronto, Canada"
+        contributor["affiliation"] = [
+            {"name": "University of Toronto, Toronto, Canada"}
+        ]
 
 metadata["contributors"].append(
     {
@@ -55,9 +57,6 @@ today = datetime.date.today().isoformat()
 for date in metadata["dates"]:
     if date["dateType"] == "Updated":
         date["date"] = today
-
-print(metadata)
-exit()
 
 # Generate new license
 lic_f = open("license-start.txt", "r")
@@ -94,7 +93,7 @@ if production == False:
     api_url = "https://cd-sandbox.tind.io/api/record/"
 else:
     api_url = "https://data.caltech.edu/api/record/"
-response = requests.get(api_url + rec_id)
+response = requests.get(api_url + str(record_id))
 ex_metadata = response.json()["metadata"]
 for f in ex_metadata["electronic_location_and_access"]:
     if f["electronic_name"][0] == "LICENSE.txt":
@@ -103,7 +102,7 @@ for f in ex_metadata["electronic_location_and_access"]:
 metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
 
 response = caltechdata_edit(
-    rec_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
+    record_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
 )
 print(response)
 
