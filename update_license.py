@@ -35,6 +35,8 @@ for row in site_ids:
     for site in tccon_sites:
         if long_name == tccon_sites[site]["long_name"]:
             location = tccon_sites[site]["location"]
+            citation = tccon_sites[site]["data_reference"]
+            doi = tccon_sites[site]["data_doi"]
 
     metadata = get_metadata(record_id, schema="43", emails=True)
 
@@ -65,8 +67,7 @@ for row in site_ids:
     lic_f = open("license-start.txt", "r")
     lic_t = open("license-end.txt", "r")
     lic = lic_f.read()
-    cite = site_info["data_reference"]
-    lic = lic + cite
+    lic = lic + citation
     lic = lic + "\n\n" + lic_t.read()
     outf = open("LICENSE.txt", "w")
     outf.write(lic)
@@ -87,7 +88,7 @@ for row in site_ids:
         api_url = "https://cd-sandbox.tind.io/api/record/"
     else:
         api_url = "https://data.caltech.edu/api/record/"
-    response = requests.get(api_url + rec_id)
+    response = requests.get(api_url + record_id)
     ex_metadata = response.json()["metadata"]
     for f in ex_metadata["electronic_location_and_access"]:
         if f["electronic_name"][0] == "LICENSE.txt":
@@ -96,7 +97,7 @@ for row in site_ids:
     metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
 
     response = caltechdata_edit(
-        rec_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
+        record_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
     )
     print(response)
 
