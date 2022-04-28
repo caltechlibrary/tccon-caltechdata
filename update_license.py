@@ -60,9 +60,6 @@ for row in site_ids:
         if date["dateType"] == "Updated":
             date["date"] = today
 
-    print(metadata)
-    exit()
-
     # Generate new license
     lic_f = open("license-start.txt", "r")
     lic_t = open("license-end.txt", "r")
