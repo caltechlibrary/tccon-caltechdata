@@ -25,30 +25,16 @@ site_ids = csv.reader(infile)
 ids = {}
 version = {}
 for row in site_ids:
-    skey = row[0]
+    long_name = row[0]
     record_id = row[1]
     version = row[2]
-
-    # Get data file
-    sitef = glob.glob(f"{data_location}{skey}*.nc")
-    if len(sitef) != 1:
-        print(f"Cannot find public file for site {skey} in {data_location}")
-        exit()
-    else:
-        sitef = sitef[0]
 
     # Prep metadata
     site_file = open(metadata_path + site_info_fname, "r")
     tccon_sites = json.load(site_file)
-    site_info = tccon_sites[skey]
-    site_name = site_info["long_name"]
-    site_doi = site_info["data_doi"]
-    version = site_info["data_revision"]
-    # Get contact information from form "name <email>"
-    site_contact = site_info["contact"]
-    split_contact = site_contact.split("<")
-    contact_name = split_contact[0]
-    contact_email = split_contact[1].split(">")[0]
+    for site in tccon_sites:
+        if long_name == tccon_sites[site]["long_name"]:
+            location = tccon_sites[site]["location"]
 
     metadata = get_metadata(record_id, schema="43", emails=True)
 
@@ -62,7 +48,7 @@ for row in site_ids:
     constituents including CO2, CH4, N2O, HF, CO, H2O, and HDO, are retrieved. This
     is the GGG2020 data release of observations from the TCCON station at
     """
-            + site_name,
+            + location,
         }
     ]
 
