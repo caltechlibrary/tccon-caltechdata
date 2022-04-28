@@ -18,9 +18,9 @@ proper acknowledgement to you as the source.
 4. All other rights, including redistribution, display, and publishing
 adaptations are reserved.
 
-5. At a minimum of 10 weeks prior to publication or presentation of works that
-include TCCON data, you must contact the individuals listed on the DOI landing
-page via email and provide a description of the intended publication or
+5. At a minimum of 4-6 weeks prior to the submission of a manuscript and 1-2 weeks 
+prior to a public presentation of works that include TCCON data, you must contact the 
+individuals listed on the DOI landing page via email and provide a description of the intended publication or
 presentation. If the TCCON partner makes a significant intellectual
 contribution to the research, or TCCON data from a site is essential to the
 work, co−authorship would normally be expected. This should be discussed at an

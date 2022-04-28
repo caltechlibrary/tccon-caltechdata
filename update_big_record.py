@@ -12,13 +12,12 @@ password = os.environ["DATACITE"]
 
 d = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password, prefix="10.14291")
 
-metadata = get_metadata(293, schema="43", emails=True)
+record_id = 20140
+
+metadata = get_metadata(record_id, schema="43", emails=True)
 
 doi = "10.14291/TCCON.GGG2020"
 
-metadata["identifiers"] = [{"identifier": doi, "identifierType": "DOI"}]
-metadata["version"] = "GGG2020"
-metadata["titles"] = [{"title": "2020 TCCON Data Release"}]
 metadata["descriptions"] = [
     {
         "descriptionType": "Other",
@@ -27,25 +26,38 @@ a network of ground-based Fourier Transform Spectrometers that record direct
 solar absorption spectra of the atmosphere in the near-infrared. From these
 spectra, accurate and precise column-averaged abundances of atmospheric
 constituents including CO2, CH4, N2O, HF, CO, H2O, and HDO, are retrieved. This
-is the 220 data release.""",
+is the GGG2020 data release.""",
     }
 ]
+
+for contributor in metadata["contributors"]:
+    if contributor["name"] == "Wunch, Debra":
+        contributor["affiliation"] = "University of Toronto, Toronto, Canada"
+
+metadata["contributors"].append(
+    {
+        "affiliation": [
+            {
+                "name": "Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA."
+            }
+        ],
+        "nameIdentifiers": [
+            {"nameIdentifier": "0000-0002-8599-4555", "nameIdentifierScheme": "ORCID"}
+        ],
+        "name": "Laughner, Joshua L.",
+        "contributorType": "ContactPerson",
+        "contributorEmail": "josh.laughner@jpl.nasa.gov",
+    }
+)
+
 # Dates
 today = datetime.date.today().isoformat()
-metadata["dates"] = [
-    {"dateType": "Updated", "date": today},
-    {"dateType": "Created", "date": today},
-]
-metadata["publicationDate"] = today
-year = today.split("-")[0]
-metadata["publicationYear"] = year
+for date in metadata["dates"]:
+    if date["dateType"] == "Updated":
+        date["date"] = today
 
-identifiers = []
-record_metadata = get_metadata(20093, schema="43")
-for identifier in record_metadata["relatedIdentifiers"]:
-    if identifier["relationType"] != "IsPartOf":
-        identifiers.append(identifier)
-metadata["relatedIdentifiers"] = identifiers
+print(metadata)
+exit()
 
 # Generate new license
 lic_f = open("license-start.txt", "r")
@@ -72,10 +84,10 @@ outf.close()
 files = ["LICENSE.txt", "/data/tccon/3a-std-public/tccon.latest.public.tgz"]
 production = True
 
-response = caltechdata_write(metadata, token, files, production, schema="43")
+response = caltechdata_edit(
+    record_id, metadata, token, files, {}, production, schema="43"
+)
 print(response)
-rec_id = response.split("/")[4].split(".")[0]
-print(rec_id)
 
 # Get file url
 if production == False:
@@ -102,6 +114,6 @@ for c in metadata["contributors"]:
 if "publicationDate" in metadata:
     metadata.pop("publicationDate")
 
-doi = d.public_doi(metadata, data_url + str(rec_id), doi=doi)
+doi = d.update_doi(doi, metadata)
 
 print(doi)
