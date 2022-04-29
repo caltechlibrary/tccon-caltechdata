@@ -30,27 +30,15 @@ is the GGG2020 data release.""",
     }
 ]
 
-for contributor in metadata["contributors"]:
-    if contributor["name"] == "Wunch, Debra":
-        contributor["affiliation"] = [
-            {"name": "University of Toronto, Toronto, Canada"}
-        ]
+contributors = []
 
-metadata["contributors"].append(
-    {
-        "affiliation": [
-            {
-                "name": "Jet Propulsion Laboratory, California Institute of Technology, Pasadena, CA, USA."
-            }
-        ],
-        "nameIdentifiers": [
-            {"nameIdentifier": "0000-0002-8599-4555", "nameIdentifierScheme": "ORCID"}
-        ],
-        "name": "Laughner, Joshua L.",
-        "contributorType": "ContactPerson",
-        "contributorEmail": "josh.laughner@jpl.nasa.gov",
-    }
-)
+for contributor in metadata["contributors"]:
+    if contributor["name"] == "Laughner, Joshua L.":
+        contributors.append(contributor)
+        break
+    contributors.append(contributor)
+
+metadata["contributors"] = contributors
 
 # Dates
 today = datetime.date.today().isoformat()
