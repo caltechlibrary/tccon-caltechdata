@@ -18,27 +18,17 @@ metadata = get_metadata(record_id, schema="43", emails=True)
 
 doi = "10.14291/TCCON.GGG2020"
 
-metadata["descriptions"] = [
-    {
-        "descriptionType": "Other",
-        "description": """The Total Carbon Column Observing Network (TCCON) is
-a network of ground-based Fourier Transform Spectrometers that record direct
-solar absorption spectra of the atmosphere in the near-infrared. From these
-spectra, accurate and precise column-averaged abundances of atmospheric
-constituents including CO2, CH4, N2O, HF, CO, H2O, and HDO, are retrieved. This
-is the GGG2020 data release.""",
-    }
+metadata["subjects"] = [
+    {"subject": "atmospheric trace gases"},
+    {"subject": "CO2"},
+    {"subject": "CH4"},
+    {"subject": "CO"},
+    {"subject": "N2O"},
+    {"subject": "column-averaged dry-air mole fractions"},
+    {"subject": "remote sensing"},
+    {"subject": "FTIR spectroscopy"},
+    {"subject": "TCCON"},
 ]
-
-contributors = []
-
-for contributor in metadata["contributors"]:
-    if contributor["name"] == "Laughner, Joshua L.":
-        contributors.append(contributor)
-        break
-    contributors.append(contributor)
-
-metadata["contributors"] = contributors
 
 # Dates
 today = datetime.date.today().isoformat()

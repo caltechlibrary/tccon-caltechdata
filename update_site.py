@@ -3,41 +3,31 @@ from caltechdata_api import caltechdata_write
 from datacite import DataCiteRESTClient
 import os, csv, json, argparse, subprocess, glob, datetime, requests, copy
 
-# Switch for test or production
-production = True
-# Location where TCCON metadata application puts its files
-metadata_path = "/var/www/tccon-metadata/"
-# TCCON Site Info File Name
-site_info_fname = "site_info.json"
-# DOI Metatata Location
-doi_metadata = "/var/www/tccon-metadata/doi-metadata/"
-# Data File Location
-data_location = "/data/tccon/3a-std-public/"
 
-token = os.environ["RDMTOK"]
-password = os.environ["DATACITE"]
+def update_site(skey):
+    # Switch for test or production
+    production = True
+    # Location where TCCON metadata application puts its files
+    metadata_path = "/var/www/tccon-metadata/"
+    # TCCON Site Info File Name
+    site_info_fname = "site_info.json"
+    # DOI Metatata Location
+    doi_metadata = "/var/www/tccon-metadata/doi-metadata/"
+    # Data File Location
+    data_location = "/data/tccon/3a-std-public/"
 
-parser = argparse.ArgumentParser(description="Upload a new TCCON site to CaltechDATA")
-parser.add_argument(
-    "sid",
-    metavar="ID",
-    type=str,
-    nargs="+",
-    help="The TCCON two letter Site ID (e.g. pa for park falls)",
-)
-args = parser.parse_args()
+    token = os.environ["RDMTOK"]
+    password = os.environ["DATACITE"]
 
-# Read in site id file with CaltechDATA IDs
-infile = open("/data/tccon/site_ids.csv")
-site_ids = csv.reader(infile)
-ids = {}
-version = {}
-for row in site_ids:
-    ids[row[0]] = row[1]
-    version[row[0]] = row[2]
+    # Read in site id file with CaltechDATA IDs
+    infile = open("/data/tccon/site_ids.csv")
+    site_ids = csv.reader(infile)
+    ids = {}
+    version = {}
+    for row in site_ids:
+        ids[row[0]] = row[1]
+        version[row[0]] = row[2]
 
-# For each site to update
-for skey in args.sid:
     # Get data file
     sitef = glob.glob(f"{data_location}{skey}*.nc")
     if len(sitef) != 1:
@@ -73,10 +63,16 @@ for skey in args.sid:
     for date in ex_metadata["relevantDates"]:
         if date["relevantDateType"] == "Created":
             created = ex_metadata["relevantDateValue"]
+    descriptions = ex_metadata["descriptions"]
+    for d in descriptions:
+        d["description"] = d.pop("descriptionValue")
 
     # Get Metadata for DOI
     meta_file = open(f"{doi_metadata}{skey}_{site_name}.json", "r")
     metadata = json.load(meta_file)
+
+    # Retain CaltechDATA Descriptions
+    metadata["descriptions"] = descriptions
 
     # Dates
     today = datetime.date.today().isoformat()
@@ -108,6 +104,17 @@ for skey in args.sid:
     metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Datset"}
     metadata["schemaVersion"] = "http://datacite.org/schema/kernel-4"
     metadata["version"] = version
+    metadata["subjects"] = [
+        {"subject": "atmospheric trace gases"},
+        {"subject": "CO2"},
+        {"subject": "CH4"},
+        {"subject": "CO"},
+        {"subject": "N2O"},
+        {"subject": "column-averaged dry-air mole fractions"},
+        {"subject": "remote sensing"},
+        {"subject": "FTIR spectroscopy"},
+        {"subject": "TCCON"},
+    ]
 
     # Add contributor email
     contributors = metadata["contributors"]
@@ -184,3 +191,19 @@ for skey in args.sid:
     outsites = open("/data/tccon/sites.csv", "w")
     outsites.write(outstr)
     outsites.close()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Update TCCON site in CaltechDATA")
+    parser.add_argument(
+        "sid",
+        metavar="ID",
+        type=str,
+        nargs="+",
+        help="The TCCON two letter Site ID (e.g. pa for park falls)",
+    )
+    args = parser.parse_args()
+
+    # For each site to update
+    for skey in args.sid:
+        update_site(skey)
