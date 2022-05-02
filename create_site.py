@@ -44,6 +44,7 @@ for skey in args.sid:
     site_name = site_info["long_name"]
     site_doi = site_info["data_doi"]
     version = site_info["data_revision"]
+    location = tccon_sites[site]["location"]
     # Get contact information from form "name <email>"
     site_contact = site_info["contact"]
     split_contact = site_contact.split("<")
@@ -87,6 +88,30 @@ for skey in args.sid:
     metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Datset"}
     metadata["schemaVersion"] = "http://datacite.org/schema/kernel-4"
     metadata["version"] = version
+    metadata["descriptions"] = [
+        {
+            "descriptionType": "Other",
+            "description": """The Total Carbon Column Observing Network (TCCON) is
+    a network of ground-based Fourier Transform Spectrometers that record direct
+    solar absorption spectra of the atmosphere in the near-infrared. From these
+    spectra, accurate and precise column-averaged abundances of atmospheric
+    constituents including CO2, CH4, N2O, HF, CO, H2O, and HDO, are retrieved. This
+    is the GGG2020 data release of observations from the TCCON station at
+    """
+            + location,
+        }
+    ]
+    metadata["subjects"] = [
+        {"subject": "atmospheric trace gases"},
+        {"subject": "CO2"},
+        {"subject": "CH4"},
+        {"subject": "CO"},
+        {"subject": "N2O"},
+        {"subject": "column-averaged dry-air mole fractions"},
+        {"subject": "remote sensing"},
+        {"subject": "FTIR spectroscopy"},
+        {"subject": "TCCON"},
+    ]
 
     # Add contributor email
     contributors = metadata["contributors"]
