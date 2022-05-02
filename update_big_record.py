@@ -18,18 +18,6 @@ metadata = get_metadata(record_id, schema="43", emails=True)
 
 doi = "10.14291/TCCON.GGG2020"
 
-metadata["subjects"] = [
-    {"subject": "atmospheric trace gases"},
-    {"subject": "CO2"},
-    {"subject": "CH4"},
-    {"subject": "CO"},
-    {"subject": "N2O"},
-    {"subject": "column-averaged dry-air mole fractions"},
-    {"subject": "remote sensing"},
-    {"subject": "FTIR spectroscopy"},
-    {"subject": "TCCON"},
-]
-
 # Dates
 today = datetime.date.today().isoformat()
 for date in metadata["dates"]:
