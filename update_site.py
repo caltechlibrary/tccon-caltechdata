@@ -62,7 +62,7 @@ def update_site(skey):
             url = f["uniform_resource_identifier"]
     for date in ex_metadata["relevantDates"]:
         if date["relevantDateType"] == "Created":
-            created = ex_metadata["relevantDateValue"]
+            created = date["relevantDateValue"]
     descriptions = ex_metadata["descriptions"]
     for d in descriptions:
         d["description"] = d.pop("descriptionValue")
