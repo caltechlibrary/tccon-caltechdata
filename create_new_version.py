@@ -79,13 +79,14 @@ for skey in args.sid:
     }
     metadata["relatedIdentifiers"].append(meta)
 
-    metadata["descriptions"].insert(0,
+    metadata["descriptions"].insert(
+        0,
         {
             "description": f"""These data are now obsolete
     and should be replaced by the most recent data:<br><br>
     https://doi.org/{site_doi}""",
             "descriptionType": "Other",
-        }
+        },
     )
 
     # Update the README file
@@ -95,11 +96,10 @@ for skey in args.sid:
     outfile.write(readme)
     outfile.close()
 
-    #response = caltechdata_edit(
-    #    rec_id, copy.deepcopy(metadata), token, ["README.txt"], [],
-    #    production,"43"
-    #)
-    #print(response)
+    response = caltechdata_edit(
+        rec_id, copy.deepcopy(metadata), token, ["README.txt"], [], production, "43"
+    )
+    print(response)
 
     if production == False:
         doi = "10.33569/TCCON"
@@ -281,9 +281,10 @@ for skey in args.sid:
     # Update sites file
     infile = open("/data/tccon/site_ids.csv")
     site_ids = csv.reader(infile)
+    outstr = ""
     for row in site_ids:
         if row[0] == site_name:
-            outstr = site_name + "," + rec_id + "," + version + "\n"
+            outstr = outstr + site_name + "," + rec_id + "," + version + "\n"
         else:
             outstr = outstr + ",".join(row) + "\n"
     infile.close()
