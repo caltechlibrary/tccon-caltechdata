@@ -1,5 +1,6 @@
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
+from caltechdata_api import decustomize_schema
 from datacite import DataCiteRESTClient
 from subprocess import check_output
 import os, csv, json, subprocess, argparse, glob, datetime, requests, copy
