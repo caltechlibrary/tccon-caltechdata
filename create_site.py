@@ -44,7 +44,7 @@ for skey in args.sid:
     site_name = site_info["long_name"]
     site_doi = site_info["data_doi"]
     version = site_info["data_revision"]
-    location = tccon_sites[site]["location"]
+    location = tccon_sites[skey]["location"]
     # Get contact information from form "name <email>"
     site_contact = site_info["contact"]
     split_contact = site_contact.split("<")
