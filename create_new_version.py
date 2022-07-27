@@ -96,7 +96,8 @@ for skey in args.sid:
     outfile.close()
 
     response = caltechdata_edit(
-        token, rec_id, copy.deepcopy(metadata), ["README.txt"], [], production
+        token, rec_id, copy.deepcopy(metadata), ["README.txt"], [],
+        production,"43"
     )
     print(response)
 
