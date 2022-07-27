@@ -1,7 +1,8 @@
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
 from datacite import DataCiteRESTClient
-import os, csv, json, argparse, subprocess, glob, datetime, requests, copy
+from subprocess import check_output
+import os, csv, json, subprocess, argparse, glob, datetime, requests, copy
 
 # Switch for test or production
 production = True
@@ -64,29 +65,39 @@ for skey in args.sid:
     for f in ex_metadata["electronic_location_and_access"]:
         if f["electronic_name"][0] == "LICENSE.txt":
             url = f["uniform_resource_identifier"]
-        if f['electronic_name'][0] == 'README.txt':
-            r = requests.get(f['uniform_resource_identifier'])
-            readme = r.text  
+        if f["electronic_name"][0] == "README.txt":
+            r = requests.get(f["uniform_resource_identifier"])
+            readme = r.text
 
     metadata = decustomize_schema(ex_metadata, pass_emails=True, schema="43")
 
-    meta = {"relatedIdentifier": new_identifier,
-            "relationType": "IsPreviousVersionOf",
-            "relatedIdentifierType":"DOI"}
-    metadata['relatedIdentifiers'].append(meta)
+    meta = {
+        "relatedIdentifier": new_identifier,
+        "relationType": "IsPreviousVersionOf",
+        "relatedIdentifierType": "DOI",
+    }
+    metadata["relatedIdentifiers"].append(meta)
 
-    metadata['descriptions'].append({'description':f'''These data are now obsolete
+    metadata["descriptions"].append(
+        {
+            "description": f"""These data are now obsolete
     and should be replaced by the most recent data:<br><br>
-    https://doi.org/{site_doi}''','descriptionType':'Other'}
+    https://doi.org/{site_doi}""",
+            "descriptionType": "Other",
+        }
+    )
 
-    #Update the README file
-    outfile = open('README.txt','w')
-    outfile.write('This file is obsolete.  An updated version is available at ')
-    outfile.write('https://doi.org/'+site_doi+'\n\n')
+    # Update the README file
+    readme = f"""This file is obsolete.  An updated version is available at 
+                https://doi.org/{site_doi}\n\n"""
+    readme += check_output(["./create_readme_contents_tccon-data", sitef])
+    outfile = open("README.txt", "w")
     outfile.write(readme)
     outfile.close()
 
-    response = caltechdata_edit(token,rec_id,copy.deepcopy(metadata),['README.txt'],[],production)
+    response = caltechdata_edit(
+        token, rec_id, copy.deepcopy(metadata), ["README.txt"], [], production
+    )
     print(response)
 
     if production == False:
@@ -121,7 +132,6 @@ for skey in args.sid:
         exit()
     else:
         sitef = sitef[0]
-
 
     # Get Metadata for DOI
     meta_file = open(f"{doi_metadata}{skey}_{site_name}.json", "r")
