@@ -73,7 +73,7 @@ for skey in args.sid:
     metadata = decustomize_schema(ex_metadata, pass_emails=True, schema="43")
 
     meta = {
-        "relatedIdentifier": new_identifier,
+        "relatedIdentifier": site_doi,
         "relationType": "IsPreviousVersionOf",
         "relatedIdentifierType": "DOI",
     }
