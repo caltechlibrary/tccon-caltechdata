@@ -95,11 +95,11 @@ for skey in args.sid:
     outfile.write(readme)
     outfile.close()
 
-    response = caltechdata_edit(
-        rec_id, copy.deepcopy(metadata), token, ["README.txt"], [],
-        production,"43"
-    )
-    print(response)
+    #response = caltechdata_edit(
+    #    rec_id, copy.deepcopy(metadata), token, ["README.txt"], [],
+    #    production,"43"
+    #)
+    #print(response)
 
     if production == False:
         doi = "10.33569/TCCON"
@@ -122,6 +122,8 @@ for skey in args.sid:
             c.pop("contributorEmail")
     if "publicationDate" in metadata:
         metadata.pop("publicationDate")
+
+    doi = metadata["identifiers"][0]["identifier"]
 
     datacite.update_doi(doi, metadata)
 
