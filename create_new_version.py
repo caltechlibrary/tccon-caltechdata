@@ -79,7 +79,7 @@ for skey in args.sid:
     }
     metadata["relatedIdentifiers"].append(meta)
 
-    metadata["descriptions"].append(
+    metadata["descriptions"].insert(0,
         {
             "description": f"""These data are now obsolete
     and should be replaced by the most recent data:<br><br>
