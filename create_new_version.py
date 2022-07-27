@@ -90,8 +90,7 @@ for skey in args.sid:
 
     # Update the README file
     readme = f"""This file is obsolete.  An updated version is available at 
-                https://doi.org/{site_doi}\n\n"""
-    readme += check_output(["./create_readme_contents_tccon-data", sitef])
+                https://doi.org/{site_doi}\n\n{readme}"""
     outfile = open("README.txt", "w")
     outfile.write(readme)
     outfile.close()
