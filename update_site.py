@@ -118,13 +118,22 @@ def update_site(skey):
 
     # Add contributor email
     contributors = metadata["contributors"]
-    contributors.append(
-        {
-            "contributorType": "ContactPerson",
-            "contributorEmail": contact_email,
-            "name": contact_name,
-        }
-    )
+    existing = False
+    for c in contributors:
+        last = c['name'].split(',')[0]
+        last_contact = contact_name.split(' ')[1]
+        if last == last_contact:
+            existing = True
+            c["contributorEmail"] = contact_email
+
+    if not existing:
+        contributors.append(
+            {
+                "contributorType": "ContactPerson",
+                "contributorEmail": contact_email,
+                "name": contact_name,
+            }
+        )
 
     # Generate README file
     outf = open("README.txt", "w")
