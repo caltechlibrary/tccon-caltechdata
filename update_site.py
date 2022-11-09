@@ -1,7 +1,7 @@
 from caltechdata_api import caltechdata_edit
-from caltechdata_api import caltechdata_write
 from datacite import DataCiteRESTClient
 import os, csv, json, argparse, subprocess, glob, datetime, requests, copy
+from . import upload_files
 
 
 def update_site(skey):
@@ -52,7 +52,7 @@ def update_site(skey):
     # Get existing metadata
     rec_id = ids[site_name]
     if production == False:
-        api_url = "https://cd-sandbox.tind.io/api/record/"
+        api_url = "https://data.caltechlibrary.dev/api/record/"
     else:
         api_url = "https://data.caltech.edu/api/record/"
     response = requests.get(api_url + rec_id)
@@ -144,12 +144,22 @@ def update_site(skey):
     # Files to be uploaded
     files = ["README.txt", sitef]
 
+    # Upload files
+    file_links = upload_files(files)
+
     doi = metadata["identifiers"][0]["identifier"]
 
     metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
 
     response = caltechdata_edit(
-        rec_id, metadata, token, files, {}, production, schema="43"
+        rec_id,
+        metadata,
+        token,
+        {},
+        production,
+        schema="43",
+        publish=True,
+        file_links=file_links,
     )
     print(response)
 

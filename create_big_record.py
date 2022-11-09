@@ -4,6 +4,7 @@ from caltechdata_api import caltechdata_write
 from caltechdata_api import get_metadata
 from datacite import DataCiteRESTClient, schema43
 import datetime, requests, copy
+from upload_files import upload_files
 
 data_url = "https://data.caltech.edu/records/"
 
@@ -12,7 +13,7 @@ password = os.environ["DATACITE"]
 
 d = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password, prefix="10.14291")
 
-metadata = get_metadata(293, schema="43", emails=True)
+metadata = get_metadata("6nt42-tqn74", schema="43", emails=True)
 
 doi = "10.14291/TCCON.GGG2020"
 
@@ -39,6 +40,9 @@ metadata["dates"] = [
 metadata["publicationDate"] = today
 year = today.split("-")[0]
 metadata["publicationYear"] = year
+
+license_url = "https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+metadata["rightsList"] = [{"rightsUri": license_url, "rights": "TCCON Data License"}]
 
 identifiers = []
 record_metadata = get_metadata(20093, schema="43")
@@ -71,27 +75,19 @@ outf.close()
 # Files to be uploaded
 files = ["LICENSE.txt", "/data/tccon/3a-std-public/tccon.latest.public.tgz"]
 production = True
+community = "2dc56d1f-b31b-4b57-9e4a-835f751ae1e3"
 
-response = caltechdata_write(metadata, token, files, production, schema="43")
-print(response)
-rec_id = response.split("/")[4].split(".")[0]
-print(rec_id)
+file_links = upload_files(files, doi)
 
-# Get file url
-if production == False:
-    api_url = "https://cd-sandbox.tind.io/api/record/"
-else:
-    api_url = "https://data.caltech.edu/api/record/"
-response = requests.get(api_url + rec_id)
-ex_metadata = response.json()["metadata"]
-for f in ex_metadata["electronic_location_and_access"]:
-    if f["electronic_name"][0] == "LICENSE.txt":
-        url = f["uniform_resource_identifier"]
-
-metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
-
-response = caltechdata_edit(
-    rec_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
+response = caltechdata_write(
+    metadata,
+    token,
+    [],
+    production,
+    schema="43",
+    publish=False,
+    file_links=file_links,
+    community=community,
 )
 print(response)
 
@@ -102,6 +98,6 @@ for c in metadata["contributors"]:
 if "publicationDate" in metadata:
     metadata.pop("publicationDate")
 
-doi = d.public_doi(metadata, data_url + str(rec_id), doi=doi)
+doi = d.update_doi(doi, metadata, data_url + str(rec_id))
 
 print(doi)
