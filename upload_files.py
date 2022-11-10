@@ -1,7 +1,6 @@
 import os
 import boto3
 import urllib.request
-from progressbar import ProgressBar, FileTransferSpeed, Bar, Percentage, ETA, Timer
 
 KB = 1024
 MB = KB * KB
@@ -20,23 +19,22 @@ def upload_files(files, folder):
 
     #Delete existing .nc files
     response = s3.list_objects_v2(Bucket=bucket, Prefix=folder)
-    for objectn in response['Contents']:
-        if '.nc' in objectn['Key']:
-            print('Deleting', objectn['Key'])
-            s3_client.delete_object(Bucket=BUCKET, Key=objectn['Key'])
+    if 'Contents' in response:
+        for objectn in response['Contents']:
+            if '.nc' in objectn['Key']:
+                print('Deleting', objectn['Key'])
+                s3_client.delete_object(Bucket=BUCKET, Key=objectn['Key'])
 
-    for file in files:
-        with f as open(file,'r'):
-            bar = ProgressBar(
-            max_value=size,
-            widgets=[FileTransferSpeed(), Bar(), Percentage(), Timer(), ETA()],
-            )
-            config = boto3.s3.transfer.TransferConfig(
-            multipart_chunksize=80 * MB
-            )
-            s3.upload_fileobj(f, bucket, Prefix=filder, f"{file}", Callback=Progress(bar), Config=config)
+    print(files)
+    for filen in files:
+        if '/' in filen:
+            file_name = filen.split('/')[-1]
+        else:
+            file_name = filen
+        print(filen)
+        s3.upload_file(filen, bucket, f"{folder}/{file_name}")
+        link = f'{endpoint}{bucket}/{folder}/{file_name}'
+        file_links.append(link)
 
-            link = f'{endpoint}/{bucket}/{folder}/{file}'
-            file_links.append(link)
-
+    print(file_links)
     return file_links

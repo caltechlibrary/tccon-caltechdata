@@ -20,17 +20,6 @@ doi = "10.14291/TCCON.GGG2020"
 metadata["identifiers"] = [{"identifier": doi, "identifierType": "DOI"}]
 metadata["version"] = "GGG2020"
 metadata["titles"] = [{"title": "2020 TCCON Data Release"}]
-metadata["descriptions"] = [
-    {
-        "descriptionType": "Other",
-        "description": """The Total Carbon Column Observing Network (TCCON) is
-a network of ground-based Fourier Transform Spectrometers that record direct
-solar absorption spectra of the atmosphere in the near-infrared. From these
-spectra, accurate and precise column-averaged abundances of atmospheric
-constituents including CO2, CH4, N2O, HF, CO, H2O, and HDO, are retrieved. This
-is the 220 data release.""",
-    }
-]
 # Dates
 today = datetime.date.today().isoformat()
 metadata["dates"] = [
@@ -43,13 +32,6 @@ metadata["publicationYear"] = year
 
 license_url = "https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
 metadata["rightsList"] = [{"rightsUri": license_url, "rights": "TCCON Data License"}]
-
-identifiers = []
-record_metadata = get_metadata(20093, schema="43")
-for identifier in record_metadata["relatedIdentifiers"]:
-    if identifier["relationType"] != "IsPartOf":
-        identifiers.append(identifier)
-metadata["relatedIdentifiers"] = identifiers
 
 # Generate new license
 lic_f = open("license-start.txt", "r")
@@ -85,11 +67,10 @@ response = caltechdata_write(
     [],
     production,
     schema="43",
-    publish=False,
+    publish=True,
     file_links=file_links,
     community=community,
 )
-print(response)
 
 # Strip contributor emails
 for c in metadata["contributors"]:
@@ -98,6 +79,6 @@ for c in metadata["contributors"]:
 if "publicationDate" in metadata:
     metadata.pop("publicationDate")
 
-doi = d.update_doi(doi, metadata, data_url + str(rec_id))
+doi = d.update_doi(doi, metadata, data_url + str(response))
 
 print(doi)
