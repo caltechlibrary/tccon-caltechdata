@@ -23,7 +23,7 @@ def upload_files(files, folder):
         for objectn in response['Contents']:
             if '.nc' in objectn['Key']:
                 print('Deleting', objectn['Key'])
-                s3_client.delete_object(Bucket=BUCKET, Key=objectn['Key'])
+                s3.delete_object(Bucket=bucket, Key=objectn['Key'])
 
     print(files)
     for filen in files:

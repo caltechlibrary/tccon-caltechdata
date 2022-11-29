@@ -2,6 +2,7 @@ from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
 from datacite import DataCiteRESTClient
 import os, csv, json, argparse, subprocess, glob, datetime, requests, copy
+from upload_files import upload_files
 
 # Switch for test or production
 production = True
@@ -85,7 +86,7 @@ for skey in args.sid:
     metadata["fundingReferences"] = metadata.pop("FundingReference")
     metadata["identifiers"] = [{"identifierType": "DOI", "identifier": site_doi}]
     metadata["publisher"] = "CaltechDATA"
-    metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Datset"}
+    metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Dataset"}
     metadata["schemaVersion"] = "http://datacite.org/schema/kernel-4"
     metadata["version"] = version
     metadata["descriptions"] = [
@@ -112,16 +113,16 @@ for skey in args.sid:
         {"subject": "FTIR spectroscopy"},
         {"subject": "TCCON"},
     ]
+    for cont in metadata["contributors"]:
+        if cont['contributorType'] == 'HostingInstitution':
+            cont['nameType'] = 'Organizational'
+        if cont['contributorType'] == 'ResearchGroup':
+            cont['nameType'] = 'Organizational'
+        if cont['contributorType'] == 'ContactPerson':
+            cont['contributorEmail'] = contact_email
 
-    # Add contributor email
-    contributors = metadata["contributors"]
-    contributors.append(
-        {
-            "contributorType": "ContactPerson",
-            "contributorEmail": contact_email,
-            "name": contact_name,
-        }
-    )
+    license_url = f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+    metadata["rightsList"] = [{"rightsUri": license_url, "rights": "TCCON Data License"}]
 
     # Generate README file
     outf = open("README.txt", "w")
@@ -145,28 +146,25 @@ for skey in args.sid:
 
     doi = metadata["identifiers"][0]["identifier"]
 
-    response = caltechdata_write(metadata, token, files, production, schema="43")
-    print(response)
-    rec_id = response.split("/")[4].split(".")[0]
-    print(rec_id)
+    community = "2dc56d1f-b31b-4b57-9e4a-835f751ae1e3"
 
-    # Get file url
-    if production == False:
-        api_url = "https://cd-sandbox.tind.io/api/record/"
-    else:
-        api_url = "https://data.caltech.edu/api/record/"
-    response = requests.get(api_url + rec_id)
-    ex_metadata = response.json()["metadata"]
-    for f in ex_metadata["electronic_location_and_access"]:
-        if f["electronic_name"][0] == "LICENSE.txt":
-            url = f["uniform_resource_identifier"]
+    file_links = upload_files(files, doi)
 
-    metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
+    print(json.dumps(metadata))
 
-    response = caltechdata_edit(
-        rec_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
+    response = caltechdata_write(
+    metadata,
+    token,
+    [],
+    production,
+    schema="43",
+    publish=True,
+    file_links=file_links,
+    community=community,
     )
+
     print(response)
+    rec_id = response
 
     if production == False:
         doi = "10.33569/TCCON"
