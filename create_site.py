@@ -114,15 +114,19 @@ for skey in args.sid:
         {"subject": "TCCON"},
     ]
     for cont in metadata["contributors"]:
-        if cont['contributorType'] == 'HostingInstitution':
-            cont['nameType'] = 'Organizational'
-        if cont['contributorType'] == 'ResearchGroup':
-            cont['nameType'] = 'Organizational'
-        if cont['contributorType'] == 'ContactPerson':
-            cont['contributorEmail'] = contact_email
+        if cont["contributorType"] == "HostingInstitution":
+            cont["nameType"] = "Organizational"
+        if cont["contributorType"] == "ResearchGroup":
+            cont["nameType"] = "Organizational"
+        if cont["contributorType"] == "ContactPerson":
+            cont["contributorEmail"] = contact_email
 
-    license_url = f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
-    metadata["rightsList"] = [{"rightsUri": license_url, "rights": "TCCON Data License"}]
+    license_url = (
+        f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+    )
+    metadata["rightsList"] = [
+        {"rightsUri": license_url, "rights": "TCCON Data License"}
+    ]
 
     # Generate README file
     outf = open("README.txt", "w")
@@ -153,14 +157,14 @@ for skey in args.sid:
     print(json.dumps(metadata))
 
     response = caltechdata_write(
-    metadata,
-    token,
-    [],
-    production,
-    schema="43",
-    publish=True,
-    file_links=file_links,
-    community=community,
+        metadata,
+        token,
+        [],
+        production,
+        schema="43",
+        publish=True,
+        file_links=file_links,
+        community=community,
     )
 
     print(response)

@@ -4,6 +4,7 @@ from caltechdata_api import caltechdata_write
 from caltechdata_api import get_metadata
 from datacite import DataCiteRESTClient, schema43
 import datetime, requests, copy
+from upload_files import upload_files
 
 data_url = "https://data.caltech.edu/records/"
 
@@ -12,17 +13,11 @@ password = os.environ["DATACITE"]
 
 d = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password, prefix="10.14291")
 
-record_id = 20140
+record_id = 'aqbds-t4p06'
 
 metadata = get_metadata(record_id, schema="43", emails=True)
 
 doi = "10.14291/TCCON.GGG2020"
-
-# Dates
-today = datetime.date.today().isoformat()
-for date in metadata["dates"]:
-    if date["dateType"] == "Updated":
-        date["date"] = today
 
 # Generate new license
 lic_f = open("license-start.txt", "r")
@@ -49,26 +44,11 @@ outf.close()
 files = ["LICENSE.txt", "/data/tccon/3a-std-public/tccon.latest.public.tgz"]
 production = True
 
-response = caltechdata_edit(
-    record_id, metadata, token, files, {}, production, schema="43"
-)
-print(response)
-
-# Get file url
-if production == False:
-    api_url = "https://cd-sandbox.tind.io/api/record/"
-else:
-    api_url = "https://data.caltech.edu/api/record/"
-response = requests.get(api_url + str(record_id))
-ex_metadata = response.json()["metadata"]
-for f in ex_metadata["electronic_location_and_access"]:
-    if f["electronic_name"][0] == "LICENSE.txt":
-        url = f["uniform_resource_identifier"]
-
-metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
+file_links = upload_files(files, doi)
 
 response = caltechdata_edit(
-    record_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
+    record_id, metadata, token, [],  production, schema="43",publish=True,
+    file_links=file_links
 )
 print(response)
 

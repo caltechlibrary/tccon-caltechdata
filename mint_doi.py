@@ -8,11 +8,7 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
-    "ids",
-    metavar="ID",
-    type=int,
-    nargs="+",
-    help="The CaltechDATA ID for each record",
+    "ids", metavar="ID", type=int, nargs="+", help="The CaltechDATA ID for each record",
 )
 
 args = parser.parse_args()

@@ -1,7 +1,7 @@
 from caltechdata_api import caltechdata_edit
 from datacite import DataCiteRESTClient
 import os, csv, json, argparse, subprocess, glob, datetime, requests, copy
-from . import upload_files
+from upload_files import upload_files
 
 
 def update_site(skey):
@@ -52,27 +52,29 @@ def update_site(skey):
     # Get existing metadata
     rec_id = ids[site_name]
     if production == False:
-        api_url = "https://data.caltechlibrary.dev/api/record/"
+        api_url = "https://data.caltechlibrary.dev/api/records/"
     else:
-        api_url = "https://data.caltech.edu/api/record/"
+        api_url = "https://data.caltech.edu/api/records/"
     response = requests.get(api_url + rec_id)
     ex_metadata = response.json()["metadata"]
-    for f in ex_metadata["electronic_location_and_access"]:
-        if f["electronic_name"][0] == "LICENSE.txt":
-            url = f["uniform_resource_identifier"]
-    for date in ex_metadata["relevantDates"]:
-        if date["relevantDateType"] == "Created":
-            created = date["relevantDateValue"]
-    descriptions = ex_metadata["descriptions"]
-    for d in descriptions:
-        d["description"] = d.pop("descriptionValue")
+    for date in ex_metadata["dates"]:
+        if date["type"]["id"] == "created":
+            created = date["date"]
+    description = ex_metadata["description"]
+    pub_date = ex_metadata["publication_date"]
+    cdid = False
+    if "identifiers" in ex_metadata:
+        cdid = ex_metadata["identifiers"][0]["identifier"]
 
     # Get Metadata for DOI
     meta_file = open(f"{doi_metadata}{skey}_{site_name}.json", "r")
     metadata = json.load(meta_file)
 
-    # Retain CaltechDATA Descriptions
-    metadata["descriptions"] = descriptions
+    # Retain CaltechDATA Description
+    metadata["descriptions"] = [
+        {"descriptionType": "Abstract", "description": description}
+    ]
+    metadata["publication_date"] = pub_date
 
     # Dates
     today = datetime.date.today().isoformat()
@@ -100,8 +102,10 @@ def update_site(skey):
     metadata.pop("__last_modified__")
     metadata["fundingReferences"] = metadata.pop("FundingReference")
     metadata["identifiers"] = [{"identifierType": "DOI", "identifier": site_doi}]
+    if cdid:
+        metadata["identifiers"].append({"identifierType": "cdid", "identifier": cdid})
     metadata["publisher"] = "CaltechDATA"
-    metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Datset"}
+    metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Dataset"}
     metadata["schemaVersion"] = "http://datacite.org/schema/kernel-4"
     metadata["version"] = version
     metadata["subjects"] = [
@@ -116,12 +120,19 @@ def update_site(skey):
         {"subject": "TCCON"},
     ]
 
+    for cont in metadata["contributors"]:
+        if cont["contributorType"] == "HostingInstitution":
+            cont["nameType"] = "Organizational"
+        if cont["contributorType"] == "ResearchGroup":
+            cont["nameType"] = "Organizational"
+
     # Add contributor email
     contributors = metadata["contributors"]
     existing = False
+    last_contact = contact_name.split(" ")[1]
+    first_contact = contact_name.split(" ")[0]
     for c in contributors:
-        last = c['name'].split(',')[0]
-        last_contact = contact_name.split(' ')[1]
+        last = c["name"].split(",")[0]
         if last == last_contact:
             existing = True
             c["contributorEmail"] = contact_email
@@ -131,6 +142,8 @@ def update_site(skey):
             {
                 "contributorType": "ContactPerson",
                 "contributorEmail": contact_email,
+                "familyName": last_contact,
+                "givenName": first_contact,
                 "name": contact_name,
             }
         )
@@ -145,11 +158,17 @@ def update_site(skey):
     files = ["README.txt", sitef]
 
     # Upload files
-    file_links = upload_files(files)
+    file_links = upload_files(files, site_doi)
 
-    doi = metadata["identifiers"][0]["identifier"]
+    license_url = (
+        f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+    )
+    metadata["rightsList"] = [
+        {"rightsUri": license_url, "rights": "TCCON Data License"}
+    ]
+    file_links.append(license_url)
 
-    metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
+    print(json.dumps(metadata))
 
     response = caltechdata_edit(
         rec_id,
@@ -185,7 +204,7 @@ def update_site(skey):
     if "publicationDate" in metadata:
         metadata.pop("publicationDate")
 
-    datacite.update_doi(doi, metadata)
+    #datacite.update_doi(site_doi, metadata)
 
     # Update site list
 
@@ -196,7 +215,7 @@ def update_site(skey):
     split = cred.split("/")
     first = split[0]
     second = split[1]
-    outsites = f"{title} [{site_name}],https://doi.org/{doi},{first},{second}\n"
+    outsites = f"{title} [{site_name}],https://doi.org/{site_doi},{first},{second}\n"
 
     existing = open("/data/tccon/sites.csv", "r")
     sites = csv.reader(existing)

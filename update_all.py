@@ -9,6 +9,7 @@ site_info_fname = "site_info.json"
 # Read in site id file with CaltechDATA IDs
 infile = open("/data/tccon/site_ids.csv")
 site_ids = csv.reader(infile)
+
 for row in site_ids:
     long_name = row[0]
     record_id = row[1]
@@ -22,4 +23,8 @@ for row in site_ids:
         if long_name == tccon_sites[site]["long_name"]:
             short_name = site
 
-    update_site(short_name)
+    print(short_name)
+
+    if short_name not in ['eu','hf','et','df','ny','or']:
+
+        update_site(short_name)

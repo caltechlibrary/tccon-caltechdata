@@ -1,6 +1,6 @@
 from caltechdata_api import caltechdata_edit
 from caltechdata_api import caltechdata_write
-from caltechdata_api import decustomize_schema
+from upload_files import upload_files
 from datacite import DataCiteRESTClient
 from subprocess import check_output
 import os, csv, json, subprocess, argparse, glob, datetime, requests, copy
@@ -55,77 +55,8 @@ for skey in args.sid:
     contact_name = split_contact[0]
     contact_email = split_contact[1].split(">")[0]
 
-    # Get existing metadata
+    # Existing record
     rec_id = ids[site_name]
-    if production == False:
-        api_url = "https://cd-sandbox.tind.io/api/record/"
-    else:
-        api_url = "https://data.caltech.edu/api/record/"
-    response = requests.get(api_url + rec_id)
-    ex_metadata = response.json()["metadata"]
-    for f in ex_metadata["electronic_location_and_access"]:
-        if f["electronic_name"][0] == "LICENSE.txt":
-            url = f["uniform_resource_identifier"]
-        if f["electronic_name"][0] == "README.txt":
-            r = requests.get(f["uniform_resource_identifier"])
-            readme = r.text
-
-    metadata = decustomize_schema(ex_metadata, pass_emails=True, schema="43")
-
-    meta = {
-        "relatedIdentifier": site_doi,
-        "relationType": "IsPreviousVersionOf",
-        "relatedIdentifierType": "DOI",
-    }
-    metadata["relatedIdentifiers"].append(meta)
-
-    metadata["descriptions"].insert(
-        0,
-        {
-            "description": f"""These data are now obsolete
-    and should be replaced by the most recent data:<br><br>
-    https://doi.org/{site_doi}""",
-            "descriptionType": "Other",
-        },
-    )
-
-    # Update the README file
-    readme = f"""This file is obsolete.  An updated version is available at 
-                https://doi.org/{site_doi}\n\n{readme}"""
-    outfile = open("README.txt", "w")
-    outfile.write(readme)
-    outfile.close()
-
-    response = caltechdata_edit(
-        rec_id, copy.deepcopy(metadata), token, ["README.txt"], [], production, "43"
-    )
-    print(response)
-
-    if production == False:
-        doi = "10.33569/TCCON"
-        url = "https://cd-sandbox.tind.io/records/"
-        datacite = DataCiteRESTClient(
-            username="CALTECH.LIBRARY",
-            password=password,
-            prefix="10.33569",
-            test_mode=True,
-        )
-    else:
-        url = "https://data.caltech.edu/records/"
-        datacite = DataCiteRESTClient(
-            username="CALTECH.LIBRARY", password=password, prefix="10.14291"
-        )
-
-    # Strip contributor emails
-    for c in metadata["contributors"]:
-        if "contributorEmail" in c:
-            c.pop("contributorEmail")
-    if "publicationDate" in metadata:
-        metadata.pop("publicationDate")
-
-    doi = metadata["identifiers"][0]["identifier"]
-
-    datacite.update_doi(doi, metadata)
 
     # Create new site record
     # Get data file
@@ -170,12 +101,12 @@ for skey in args.sid:
     metadata["fundingReferences"] = metadata.pop("FundingReference")
     metadata["identifiers"] = [{"identifierType": "DOI", "identifier": site_doi}]
     metadata["publisher"] = "CaltechDATA"
-    metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Datset"}
+    metadata["types"] = {"resourceTypeGeneral": "Dataset", "resourceType": "Dataset"}
     metadata["schemaVersion"] = "http://datacite.org/schema/kernel-4"
     metadata["version"] = version
     metadata["descriptions"] = [
         {
-            "descriptionType": "Other",
+            "descriptionType": "Abstract",
             "description": """The Total Carbon Column Observing Network (TCCON) is
     a network of ground-based Fourier Transform Spectrometers that record direct
     solar absorption spectra of the atmosphere in the near-infrared. From these
@@ -198,15 +129,20 @@ for skey in args.sid:
         {"subject": "TCCON"},
     ]
 
-    # Add contributor email
-    contributors = metadata["contributors"]
-    contributors.append(
-        {
-            "contributorType": "ContactPerson",
-            "contributorEmail": contact_email,
-            "name": contact_name,
-        }
+    for cont in metadata["contributors"]:
+        if cont["contributorType"] == "HostingInstitution":
+            cont["nameType"] = "Organizational"
+        if cont["contributorType"] == "ResearchGroup":
+            cont["nameType"] = "Organizational"
+        if cont["contributorType"] == "ContactPerson":
+            cont["contributorEmail"] = contact_email
+
+    license_url = (
+        f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
     )
+    metadata["rightsList"] = [
+        {"rightsUri": license_url, "rights": "TCCON Data License"}
+    ]
 
     # Generate README file
     outf = open("README.txt", "w")
@@ -228,30 +164,23 @@ for skey in args.sid:
     # Files to be uploaded
     files = ["README.txt", "LICENSE.txt", sitef]
 
-    doi = metadata["identifiers"][0]["identifier"]
+    community = "2dc56d1f-b31b-4b57-9e4a-835f751ae1e3"
 
-    response = caltechdata_write(metadata, token, files, production, schema="43")
-    print(response)
-    rec_id = response.split("/")[4].split(".")[0]
-    print(rec_id)
-
-    # Get file url
-    if production == False:
-        api_url = "https://cd-sandbox.tind.io/api/record/"
-    else:
-        api_url = "https://data.caltech.edu/api/record/"
-    response = requests.get(api_url + rec_id)
-    ex_metadata = response.json()["metadata"]
-    for f in ex_metadata["electronic_location_and_access"]:
-        if f["electronic_name"][0] == "LICENSE.txt":
-            url = f["uniform_resource_identifier"]
-
-    metadata["rightsList"] = [{"rightsUri": url, "rights": "TCCON Data License"}]
+    file_links = upload_files(files, site_doi)
 
     response = caltechdata_edit(
-        rec_id, copy.deepcopy(metadata), token, {}, {}, production, schema="43"
+        rec_id,
+        metadata,
+        token,
+        [],
+        production,
+        schema="43",
+        publish=True,
+        file_links=file_links,
+        new_version=True,
     )
     print(response)
+    rec_id = response
 
     if production == False:
         doi = "10.33569/TCCON"
@@ -275,7 +204,7 @@ for skey in args.sid:
     if "publicationDate" in metadata:
         metadata.pop("publicationDate")
 
-    doi = datacite.public_doi(metadata, url + str(rec_id), doi=doi)
+    doi = datacite.public_doi(metadata, url + str(rec_id), doi=site_doi)
     print(doi)
 
     # Update sites file
