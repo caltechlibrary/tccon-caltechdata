@@ -25,6 +25,6 @@ for row in site_ids:
 
     print(short_name)
 
-    if short_name not in ['eu','hf','et','df','ny','or']:
+    #if short_name not in ['eu','hf','et','df','ny','or']:
 
-        update_site(short_name)
+    update_site(short_name)

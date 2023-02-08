@@ -120,10 +120,13 @@ def update_site(skey):
         {"subject": "TCCON"},
     ]
 
+    # This can be removed once metadata portal is passing types and all names
+    # for fc site
     for cont in metadata["contributors"]:
-        if cont["contributorType"] == "HostingInstitution":
+        if 'familyName' not in cont:
             cont["nameType"] = "Organizational"
-        if cont["contributorType"] == "ResearchGroup":
+    for cont in metadata["creators"]:
+        if 'familyName' not in cont:
             cont["nameType"] = "Organizational"
 
     # Add contributor email
@@ -156,7 +159,7 @@ def update_site(skey):
 
     # Files to be uploaded
     files = ["README.txt", sitef]
-
+    
     # Upload files
     file_links = upload_files(files, site_doi)
 
@@ -204,8 +207,8 @@ def update_site(skey):
     if "publicationDate" in metadata:
         metadata.pop("publicationDate")
 
-    #datacite.update_doi(site_doi, metadata)
-
+    datacite.update_doi(site_doi, metadata)
+    
     # Update site list
 
     # Generate site text
@@ -221,7 +224,7 @@ def update_site(skey):
     sites = csv.reader(existing)
     outstr = ""
     for row in sites:
-        if title.startswith(row[0]):
+        if row[0].startswith(title):
             outstr = outstr + outsites
         else:
             outstr = outstr + ",".join(row) + "\n"
