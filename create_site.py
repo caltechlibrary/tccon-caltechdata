@@ -91,7 +91,7 @@ for skey in args.sid:
     metadata["version"] = version
     metadata["descriptions"] = [
         {
-            "descriptionType": "Other",
+            "descriptionType": "Abstract",
             "description": """The Total Carbon Column Observing Network (TCCON) is
     a network of ground-based Fourier Transform Spectrometers that record direct
     solar absorption spectra of the atmosphere in the near-infrared. From these

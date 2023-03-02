@@ -218,13 +218,14 @@ def update_site(skey):
     split = cred.split("/")
     first = split[0]
     second = split[1]
-    outsites = f"{title} [{site_name}],https://doi.org/{site_doi},{first},{second}\n"
+    front = f'{title} [{site_name}]'
+    outsites = f"{front},https://doi.org/{site_doi},{first},{second}\n"
 
     existing = open("/data/tccon/sites.csv", "r")
     sites = csv.reader(existing)
     outstr = ""
     for row in sites:
-        if row[0].startswith(title):
+        if row[0].startswith(front):
             outstr = outstr + outsites
         else:
             outstr = outstr + ",".join(row) + "\n"
