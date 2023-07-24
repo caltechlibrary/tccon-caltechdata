@@ -17,6 +17,10 @@ record_id = 'aqbds-t4p06'
 
 metadata = get_metadata(record_id, schema="43", emails=True)
 
+# Add updated date
+today = datetime.date.today().isoformat()
+metadata["dates"].append({"dateType": "Updated", "date": today})
+
 doi = "10.14291/TCCON.GGG2020"
 
 # Generate new license
