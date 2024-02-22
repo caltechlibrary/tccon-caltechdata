@@ -121,7 +121,6 @@ def update_site(skey):
     ]
 
     # This can be removed once metadata portal is passing types and all names
-    # for fc site
     for cont in metadata["contributors"]:
         if 'familyName' not in cont:
             cont["nameType"] = "Organizational"

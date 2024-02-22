@@ -19,7 +19,9 @@ metadata = get_metadata(record_id, schema="43", emails=True)
 
 # Add updated date
 today = datetime.date.today().isoformat()
-metadata["dates"].append({"dateType": "Updated", "date": today})
+for date in metadata["dates"]:
+    if date["dateType"] == "Updated":
+        date["date"] = today
 
 doi = "10.14291/TCCON.GGG2020"
 
