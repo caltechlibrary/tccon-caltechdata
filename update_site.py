@@ -163,7 +163,7 @@ def update_site(skey):
     file_links = upload_files(files, site_doi)
 
     license_url = (
-        f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+        f"https://sdsc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
     )
     metadata["rightsList"] = [
         {"rightsUri": license_url, "rights": "TCCON Data License"}

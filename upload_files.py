@@ -14,7 +14,7 @@ def upload_files(files, folder):
     file_links = []
 
     path = "caltechdata"
-    endpoint = "https://renc.osn.xsede.org/"
+    endpoint = "https://sdsc.osn.xsede.org/"
     s3 = boto3.client(
         "s3", endpoint_url=endpoint, aws_access_key_id=key, aws_secret_access_key=secret
     )

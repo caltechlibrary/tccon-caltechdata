@@ -30,7 +30,7 @@ metadata["publicationDate"] = today
 year = today.split("-")[0]
 metadata["publicationYear"] = year
 
-license_url = "https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+license_url = "https://sdsc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
 metadata["rightsList"] = [{"rightsUri": license_url, "rights": "TCCON Data License"}]
 
 # Generate new license

@@ -122,7 +122,7 @@ for skey in args.sid:
             cont["contributorEmail"] = contact_email
 
     license_url = (
-        f"https://renc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+        f"https://sdsc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
     )
     metadata["rightsList"] = [
         {"rightsUri": license_url, "rights": "TCCON Data License"}
@@ -172,7 +172,7 @@ for skey in args.sid:
 
     if production == False:
         doi = "10.33569/TCCON"
-        url = "https://cd-sandbox.tind.io/records/"
+        url = "https://data.caltechlibrary.dev/records/"
         datacite = DataCiteRESTClient(
             username="CALTECH.LIBRARY",
             password=password,
