@@ -182,6 +182,7 @@ for skey in args.sid:
         new_version=True,
     )
     print(response)
+    rec_id = response
 
     if production == False:
         doi = "10.33569/TCCON"

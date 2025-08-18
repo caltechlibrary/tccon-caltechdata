@@ -118,6 +118,8 @@ for skey in args.sid:
             cont["nameType"] = "Organizational"
         if cont["contributorType"] == "ResearchGroup":
             cont["nameType"] = "Organizational"
+        if cont["contributorType"] == "Producer":
+            cont["nameType"] = "Organizational"
         if cont["contributorType"] == "ContactPerson":
             cont["contributorEmail"] = contact_email
 
