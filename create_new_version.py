@@ -180,6 +180,7 @@ for skey in args.sid:
         publish=True,
         file_links=file_links,
         new_version=True,
+        return_id=True
     )
     print(response)
     rec_id = response
