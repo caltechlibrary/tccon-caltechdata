@@ -93,3 +93,9 @@ __pycache__/
 # Project-specific things to ignore:
 # .............................................................................
 run_monthly_update.sh
+run_new_site.sh
+run_new_version.sh
+run_site_update.sh
+sites.csv
+LICENSE.txt
+README.txt

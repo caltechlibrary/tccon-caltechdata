@@ -35,6 +35,7 @@ def update_site(skey):
         exit()
     else:
         sitef = sitef[0]
+    print(sitef)
 
     # Prep metadata
     site_file = open(metadata_path + site_info_fname, "r")
@@ -163,7 +164,7 @@ def update_site(skey):
     file_links = upload_files(files, site_doi)
 
     license_url = (
-        f"https://sdsc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+        f"https://caltech2.osn.mghpcc.org/caltechdata-public/{site_doi}/LICENSE.txt"
     )
     metadata["rightsList"] = [
         {"rightsUri": license_url, "rights": "TCCON Data License"}
@@ -186,7 +187,7 @@ def update_site(skey):
 
     if production == False:
         doi = "10.33569/TCCON"
-        url = "https://cd-sandbox.tind.io/records/"
+        url = "https://data.caltechlibrary.dev/records/"
         datacite = DataCiteRESTClient(
             username="CALTECH.LIBRARY",
             password=password,

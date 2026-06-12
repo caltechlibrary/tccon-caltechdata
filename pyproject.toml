@@ -1,0 +1,13 @@
+[project]
+name = "tccon-caltechdata"
+version = "1.0.0"
+description = "Automation for uploading TCCON files to CaltechDATA"
+requires-python = ">= 3.14"
+
+dependencies = [
+  "caltechdata_api>=2.0.0",
+  "boto3"
+]
+
+[tool.uv.sources]
+caltechdata_api = { git = "https://github.com/caltechlibrary/caltechdata_api", tag = "main" }

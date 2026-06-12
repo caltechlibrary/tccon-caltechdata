@@ -14,11 +14,11 @@ def upload_files(files, folder):
     file_links = []
 
     path = "caltechdata"
-    endpoint = "https://sdsc.osn.xsede.org/"
+    endpoint = "https://caltech2.osn.mghpcc.org/"
     s3 = boto3.client(
         "s3", endpoint_url=endpoint, aws_access_key_id=key, aws_secret_access_key=secret
     )
-    bucket = "ini210004tommorrell"
+    bucket = "caltechdata-public"
 
     # Delete existing .nc files
     response = s3.list_objects_v2(Bucket=bucket, Prefix=folder)

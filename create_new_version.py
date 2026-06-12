@@ -140,7 +140,7 @@ for skey in args.sid:
             cont["contributorEmail"] = contact_email
 
     license_url = (
-        f"https://sdsc.osn.xsede.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
+        f"https://caltech2.osn.mghpcc.org/ini210004tommorrell/{site_doi}/LICENSE.txt"
     )
     metadata["rightsList"] = [
         {"rightsUri": license_url, "rights": "TCCON Data License"}
