@@ -97,7 +97,7 @@ for skey in args.sid:
     solar absorption spectra of the atmosphere in the near-infrared. From these
     spectra, accurate and precise column-averaged abundances of atmospheric
     constituents including CO2, CH4, N2O, HF, CO, H2O, and HDO, are retrieved. This
-    is the GGG2020 data release of observations from the TCCON station at
+    is the GGG2020.1 data release of observations from the TCCON station at
     """
             + location,
         }

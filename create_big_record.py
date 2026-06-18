@@ -13,13 +13,13 @@ password = os.environ["DATACITE"]
 
 d = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password, prefix="10.14291")
 
-metadata = get_metadata("6nt42-tqn74", schema="43", emails=True)
+metadata = get_metadata("aqbds-t4p06", schema="43", emails=True, validate=False)
 
-doi = "10.14291/TCCON.GGG2020"
+doi = "10.14291/TCCON.GGG2020p1"
 
 metadata["identifiers"] = [{"identifier": doi, "identifierType": "DOI"}]
 metadata["version"] = "GGG2020"
-metadata["titles"] = [{"title": "2020 TCCON Data Release"}]
+metadata["titles"] = [{"title": "2020.1 TCCON Data Release"}]
 # Dates
 today = datetime.date.today().isoformat()
 metadata["dates"] = [
