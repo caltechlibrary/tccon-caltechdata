@@ -13,7 +13,7 @@ password = os.environ["DATACITE"]
 
 d = DataCiteRESTClient(username="CALTECH.LIBRARY", password=password, prefix="10.14291")
 
-record_id = 'aqbds-t4p06'
+record_id = '2ezry-sp877'
 
 metadata = get_metadata(record_id, schema="43", emails=True)
 
@@ -23,7 +23,7 @@ for date in metadata["dates"]:
     if date["dateType"] == "Updated":
         date["date"] = today
 
-doi = "10.14291/TCCON.GGG2020"
+doi = "10.14291/TCCON.GGG2020p1"
 
 # Generate new license
 lic_f = open("license-start.txt", "r")
